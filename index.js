@@ -23,9 +23,9 @@ const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 
-app.use(mongoSanitize());
+const MongoStore = require('connect-mongo');
 
-
+// const dbUrl = process.env.DB_URL
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -48,9 +48,23 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
+// const store = MongoStore.create({
+//     url: 'mongodb://localhost:27017/yelp-camp',
+//     secret: 'thisshouldbeabettersecret!',
+//     touchAfter: 24 * 60 * 60
+// })
+
+// store.on("error", function (e) {
+//     console.log("Session Store Error", e)
+// })
+
 const sessionConfig = {
+    store: MongoStore.create({
+        mongoUrl: 'mongodb://localhost:27017/yelp-camp',
+        touchAfter: 24 * 60 * 60
+    }),
     name: 'session',
-    secret: 'thisshouldbeabettersecret',
+    secret: 'thisshouldbeabettersecret!',
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -106,7 +120,6 @@ app.use(
         },
     })
 );
-
 
 app.use(passport.initialize());
 app.use(passport.session());
