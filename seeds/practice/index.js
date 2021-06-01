@@ -1,28 +1,39 @@
 const axios = require('axios');
+const fs = require('fs');
 
 const campgrounds = async function () {
     const res = await axios.get('https://developer.nps.gov/api/v1/campgrounds?limit=500&api_key=Xokt6muKOVVUUFcVQUWHpUSIt0FbP1Us2aBGROLh');
-    const campgrounds = res.data.data;
+    const campgroundsData = res.data.data;
     // let counter = 0
     const campgroundsArray = [];
-    for (let i = 0; i < campgrounds.length; i++) {
-        if (campgrounds[i].latitude && campgrounds[i].longitude){
+    for (let i = 0; i < campgroundsData.length; i++) {
+        if (campgroundsData[i].latitude && campgroundsData[i].longitude){
             let dict = {};
-            dict['name'] = campgrounds[i].name;
-            dict['description'] = campgrounds[i].description;
-            dict['longitude'] = campgrounds[i].longitude;
-            dict['latitude'] = campgrounds[i].latitude;
-            if (campgrounds[i].addresses[0]){
-                dict['location'] = `${campgrounds[i].addresses[0].city}, ${campgrounds[i].addresses[0].stateCode}`;
+            dict['name'] = campgroundsData[i].name;
+            dict['description'] = campgroundsData[i].description;
+            dict['longitude'] = campgroundsData[i].longitude;
+            dict['latitude'] = campgroundsData[i].latitude;
+            if (campgroundsData[i].addresses[0]){
+                dict['location'] = `${campgroundsData[i].addresses[0].city}, ${campgroundsData[i].addresses[0].stateCode}`;
                 // counter += 1;
             } else {
-                dict['location'] = campgrounds[i].name;
+                dict['location'] = campgroundsData[i].name;
             }
             campgroundsArray.push(dict);
-            // counter += 1;
         }
     }
     return campgroundsArray;
 }
+
+campgrounds()
+    .then(data => {
+        console.log('Success!')
+        camps = data;
+        return camps;
+    })
+    .catch(err => {
+        console.log("An Error Occured", err)
+    })
+    
 
 
