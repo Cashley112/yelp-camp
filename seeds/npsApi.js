@@ -1,5 +1,4 @@
 const axios = require('axios');
-const fs = require('fs');
 
 const campgrounds = async function () {
     const res = await axios.get('https://developer.nps.gov/api/v1/campgrounds?limit=500&api_key=Xokt6muKOVVUUFcVQUWHpUSIt0FbP1Us2aBGROLh');
@@ -25,15 +24,21 @@ const campgrounds = async function () {
     return campgroundsArray;
 }
 
-campgrounds()
-    .then(data => {
-        console.log('Success!')
-        camps = data;
-        return camps;
-    })
-    .catch(err => {
-        console.log("An Error Occured", err)
-    })
+// campgrounds()
+//     .then(data => {
+//         console.log('Success!')
+//         camps = data;
+//         return camps;
+//     })
+//     .catch(err => {
+//         console.log("An Error Occured", err)
+//     })
+
+exports.campgrounds = campgrounds;
+
+
+
+
     
 
 

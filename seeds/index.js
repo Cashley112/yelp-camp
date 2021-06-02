@@ -3,6 +3,7 @@ const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
+const npsApi = require('./npsApi');
 
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -19,11 +20,20 @@ db.once('open', () => {
 
 const sample = array => array[Math.floor(Math.random() * array.length)];
 
+npsApi.campgrounds()
+    .then(data => {
+        console.log('Success!')
+        camps = data;
+        return camps;
+    })
+    .catch(err => {
+        console.log("An Error Occured", err)
+    })
 
 const seedDB = async () => {
     await Campground.deleteMany({});
     await Review.deleteMany({});
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < camps.length; i++) {
         const random1000 = Math.floor(Math.random() * 1000);
         const price = Math.floor(Math.random() * 25) + 10;
         const camp = new Campground({
