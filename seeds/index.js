@@ -20,34 +20,26 @@ db.once('open', () => {
 
 const sample = array => array[Math.floor(Math.random() * array.length)];
 
-npsApi.campgrounds()
-    .then(data => {
-        console.log('Success!')
-        camps = data;
-        return camps;
-    })
-    .catch(err => {
-        console.log("An Error Occured", err)
-    })
-
 const seedDB = async () => {
     await Campground.deleteMany({});
     await Review.deleteMany({});
+    const camps = await npsApi.campgrounds();
     for (let i = 0; i < camps.length; i++) {
-        const random1000 = Math.floor(Math.random() * 1000);
+        // const random1000 = Math.floor(Math.random() * 1000);
         const price = Math.floor(Math.random() * 25) + 10;
         const camp = new Campground({
             // your USER ID
             author: '60a6d8e12c40f558a66a31d8',
-            location: `${cities[random1000].city}, ${cities[random1000].state}`,
-            title: `${sample(descriptors)} ${sample(places)}`,
-            description: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Debitis, reiciendis voluptatibus tenetur explicabo nam corporis. Velit ex, aliquam voluptatum, voluptas doloremque natus vitae amet cum dolorem, aspernatur aperiam eum voluptatem.Maxime optio unde, neque inventore consectetur necessitatibus quos minus, impedit esse doloremque iste ipsum est eligendi? Atque vero id aut alias. Eum ab magni eligendi, vel nemo saepe ipsum repellendus!',
+            // location: `${cities[random1000].city}, ${cities[random1000].state}`,
+            location: camps[i].location,
+            title: camps[i].name,
+            description: camps[i].description,
             price,
             geometry: { 
                 type: 'Point',
                 coordinates:  [
-                    cities[random1000].longitude,
-                    cities[random1000].latitude
+                    camps[i].longitude,
+                    camps[i].latitude
                 ]
             },
             images: [
